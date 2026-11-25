@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block title %}{{ code }} — Wanderly{% endblock %}{% block content %}<section class="empty-state error-state"><span>{{ code }}</span><h2>{{ 'Not quite the right pass.' if code == 403 else 'Looks like this trail ends here.' }}</h2><p>{{ message }}</p><a class="button button-dark" href="{{ url_for('home') }}">Back to home ↗</a></section>{% endblock %}

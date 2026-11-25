@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}Explore packages — Wanderly{% endblock %}
+{% block content %}
+<section class="page-hero page-hero-compact"><div class="eyebrow"><span>THE COLLECTION / 2026</span></div><h1>Find a trip that<br><em>feels like you.</em></h1><p>Thoughtfully planned getaways, with the details made simple.</p></section>
+<section class="catalog-section">
+  <form class="filter-panel" method="get" action="{{ url_for('packages') }}">
+    <div class="filter-search"><label for="q">Search your next trip</label><input id="q" name="q" value="{{ q }}" placeholder="Destination, state or package..."></div>
+    <div><label for="destination">Destination</label><select id="destination" name="destination"><option value="">All places</option>{% for d in destinations %}<option value="{{ d.destination_id }}" {% if selected_destination == d.destination_id|string %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></div>
+    <div><label for="category">Travel style</label><select id="category" name="category"><option value="">All styles</option>{% for c in categories %}<option value="{{ c.category }}" {% if selected_category == c.category %}selected{% endif %}>{{ c.category }}</option>{% endfor %}</select></div>
+    <div><label for="sort">Sort by</label><select id="sort" name="sort"><option value="recommended" {% if selected_sort == 'recommended' %}selected{% endif %}>Recommended</option><option value="price_low" {% if selected_sort == 'price_low' %}selected{% endif %}>Price: low to high</option><option value="price_high" {% if selected_sort == 'price_high' %}selected{% endif %}>Price: high to low</option><option value="duration" {% if selected_sort == 'duration' %}selected{% endif %}>Shortest first</option></select></div>
+    <button class="button button-dark filter-button" type="submit">Apply filters ↗</button>
+  </form>
+  <div class="catalog-heading"><span><b>{{ packages|length }}</b> trips to explore</span><span>Prices shown per person · INR</span></div>
+  {% if packages %}<div class="package-grid catalog-grid">
+    {% for package in packages %}<article class="package-card"><a class="package-visual visual-{{ (loop.index0 % 4) + 1 }}" href="{{ url_for('package_detail', package_id=package.package_id) }}"><span class="visual-emoji">{{ ['🏔️','🏰','🌴','🛶'][loop.index0 % 4] }}</span><span class="visual-tag">{{ package.category }}</span><span class="visual-index">{{ '%02d'|format(loop.index) }}</span></a><div class="package-info"><div class="package-meta"><span>📍 {{ package.destination_name }}, {{ package.state }}</span><span>{{ package.duration_days }} days</span></div><h3><a href="{{ url_for('package_detail', package_id=package.package_id) }}">{{ package.title }}</a></h3><p>{{ package.summary }}</p><div class="package-bottom"><span class="price-label">FROM <b>₹{{ '{:,.0f}'.format(package.price_per_person) }}</b><small> / person</small></span><a class="round-arrow" href="{{ url_for('package_detail', package_id=package.package_id) }}" aria-label="View package">↗</a></div></div></article>{% endfor %}
+  </div>{% else %}<div class="empty-state"><span>⌕</span><h2>No trips found just yet.</h2><p>Try a different destination, category or search term.</p><a class="button button-dark" href="{{ url_for('packages') }}">Clear all filters</a></div>{% endif %}
+</section>
+{% endblock %}

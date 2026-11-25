@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Wanderly — Find your next somewhere{% endblock %}
+{% block content %}
+<section class="hero-section">
+  <div class="hero-bg-orb orb-one"></div><div class="hero-bg-orb orb-two"></div>
+  <div class="hero-content">
+    <div class="eyebrow light-eyebrow"><span>✦</span> YOUR NEXT CHAPTER STARTS HERE</div>
+    <h1>Find your next<br><em>somewhere.</em></h1>
+    <p class="hero-copy">From mountain mornings to slow coastal evenings, discover trips that feel like they were made for you.</p>
+    <form class="hero-search" action="{{ url_for('packages') }}" method="get">
+      <label class="search-field"><span class="search-icon">⌕</span><span><small>WHERE TO?</small><input name="q" placeholder="Try Manali, Goa, Jaipur..." aria-label="Search destinations or packages"></span></label>
+      <button class="button button-coral" type="submit">Explore trips <span>↗</span></button>
+    </form>
+    <div class="hero-footnote"><span>✧ Carefully curated getaways</span><span>✧ Clear per-person pricing</span><span>✧ Easy booking management</span></div>
+  </div>
+  <div class="hero-art" aria-label="Illustration of a mountain and sun">
+    <div class="art-sun"></div><div class="art-mountain mountain-back"></div><div class="art-mountain mountain-front"></div><div class="art-lake"></div>
+    <div class="art-stamp"><span>GO</span><strong>FIND<br>YOUR<br>WILD</strong><small>✳</small></div>
+    <div class="art-label"><span class="art-label-icon">↗</span><span><b>Somewhere beautiful</b><small>is closer than you think.</small></span></div>
+  </div>
+</section>
+<section class="trust-strip"><div><strong>08</strong><span>handpicked destinations</span></div><div><strong>01</strong><span>simple booking flow</span></div><div><strong>100%</strong><span>transparent pricing</span></div><div class="trust-last"><span>Made for the journey, not just the destination</span> ↗</div></section>
+
+<section class="section section-destinations">
+  <div class="section-head"><div><div class="eyebrow"><span>01 / THE PLACES</span></div><h2>Popular places to<br><em>get lost in.</em></h2></div><a class="text-link" href="{{ url_for('packages') }}">View all destinations <span>↗</span></a></div>
+  <div class="destination-grid">
+    {% set destination_styles = ['dest-manali','dest-jaipur','dest-goa','dest-rishikesh','dest-srinagar','dest-darjeeling'] %}
+    {% set destination_emojis = ['🏔️','🏰','🌴','🌊','🌄','🍃'] %}
+    {% for destination in destinations %}
+      <a class="destination-card {{ destination_styles[loop.index0 % 6] }}" href="{{ url_for('packages', destination=destination.destination_id) }}">
+        <span class="dest-emoji">{{ destination_emojis[loop.index0 % 6] }}</span><span class="dest-card-bottom"><small>{{ destination.state }}</small><strong>{{ destination.name }}</strong><span>{{ destination.package_count }} curated {{ 'package' if destination.package_count == 1 else 'packages' }} <b>↗</b></span></span>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section section-featured">
+  <div class="section-head"><div><div class="eyebrow"><span>02 / THE GETAWAYS</span></div><h2>Trips worth<br><em>talking about.</em></h2></div><a class="text-link" href="{{ url_for('packages') }}">Explore all packages <span>↗</span></a></div>
+  <div class="package-grid">
+    {% for package in featured %}
+      <article class="package-card">
+        <a class="package-visual visual-{{ loop.index }}" href="{{ url_for('package_detail', package_id=package.package_id) }}"><span class="visual-emoji">{{ ['🏔️','🏰','🌴','🛶'][loop.index0 % 4] }}</span><span class="visual-tag">{{ package.category }}</span><span class="visual-index">0{{ loop.index }}</span></a>
+        <div class="package-info"><div class="package-meta"><span>📍 {{ package.destination_name }}, {{ package.state }}</span><span>{{ package.duration_days }} days</span></div><h3><a href="{{ url_for('package_detail', package_id=package.package_id) }}">{{ package.title }}</a></h3><p>{{ package.summary }}</p><div class="package-bottom"><span class="price-label">FROM <b>₹{{ '{:,.0f}'.format(package.price_per_person) }}</b><small> / person</small></span><a class="round-arrow" href="{{ url_for('package_detail', package_id=package.package_id) }}" aria-label="View {{ package.title }}">↗</a></div></div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+<section class="manifesto"><div class="manifesto-mark">✳</div><div><div class="eyebrow light-eyebrow">THE WANDERLY PROMISE</div><h2>Less time planning.<br><em>More time being there.</em></h2><p>Every detail, from what's included to how many seats remain, is right where you need it. So the only thing left to do is look forward to the trip.</p><a class="button button-outline-light" href="{{ url_for('packages') }}">Find your trip <span>↗</span></a></div><div class="manifesto-side-note">GO A LITTLE<br>FURTHER <span>✦</span></div></section>
+{% endblock %}
